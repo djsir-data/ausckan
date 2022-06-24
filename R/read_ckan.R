@@ -1,10 +1,10 @@
 
 #' @title Search CKAN Data Repository
 #'
-#' @param search_term
-#' @param ckan_url
-#' @param rows
-#' @param detailed
+#' @param search_term character words for search, use multiple word to improve results
+#' @param ckan_url character url for ckan api
+#' @param rows integer number of rows/results to return from api
+#' @param detailed logical full ckanr result or simple output 
 #' @param ... variables passed to package_search
 #'
 #' @import ckanr
