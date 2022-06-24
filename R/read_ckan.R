@@ -5,6 +5,7 @@
 #' @param ckan_url
 #' @param rows
 #' @param detailed
+#' @param ... variables passed to package_search
 #'
 #' @import ckanr
 #' @importFrom glue glue

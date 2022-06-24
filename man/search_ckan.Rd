@@ -28,7 +28,7 @@ search_ckan_wa(search_term, ...)
 search_ckan_nt(search_term, ...)
 }
 \arguments{
-\item{detailed}{}
+\item{...}{variables passed to package_search}
 }
 \value{
 
