@@ -10,6 +10,7 @@
 #' @import ckanr
 #' @importFrom glue glue
 #' @importFrom dplyr select mutate left_join bind_cols
+#' @importFrom rlang .data .env
 #'
 #' @return
 #' @export
