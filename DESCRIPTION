@@ -14,7 +14,8 @@ Imports:
     ckanr,
     dplyr,
     glue,
-    magrittr
+    magrittr,
+    rlang
 Suggests: 
     rmarkdown,
     knitr,
