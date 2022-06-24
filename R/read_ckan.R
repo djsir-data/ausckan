@@ -6,6 +6,10 @@
 #' @param rows
 #' @param detailed
 #'
+#' @import ckanr
+#' @importFrom glue glue
+#' @importFrom dplyr select mutate left_join bind_cols
+#'
 #' @return
 #' @export
 #'

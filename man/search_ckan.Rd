@@ -7,9 +7,11 @@
 \alias{search_ckan_aus}
 \alias{search_ckan_qld}
 \alias{search_ckan_sa}
-\title{Search ckan data repository}
+\alias{search_ckan_wa}
+\alias{search_ckan_nt}
+\title{Search CKAN Data Repository}
 \usage{
-search_ckan(search_term, ckan_url, rows = 10, detailed = FALSE)
+search_ckan(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
 
 search_ckan_vic(search_term, ...)
 
@@ -20,13 +22,17 @@ search_ckan_aus(search_term, ...)
 search_ckan_qld(search_term, ...)
 
 search_ckan_sa(search_term, ...)
+
+search_ckan_wa(search_term, ...)
+
+search_ckan_nt(search_term, ...)
 }
 \arguments{
-\item{ckan_url}{}
+\item{detailed}{}
 }
 \value{
 
 }
 \description{
-Search ckan data repository
+Search CKAN Data Repository
 }
