@@ -7,6 +7,9 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Codecov test
+coverage](https://codecov.io/gh/djpr-data/ausckan/branch/main/graph/badge.svg)](https://app.codecov.io/gh/djpr-data/ausckan?branch=main)
+[![R-CMD-check](https://github.com/djpr-data/ausckan/workflows/R-CMD-check/badge.svg)](https://github.com/djpr-data/ausckan/actions)
 <!-- badges: end -->
 
 The goal of ausckan is to …
