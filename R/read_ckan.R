@@ -10,14 +10,23 @@
 #' @export
 #'
 #' @examples
-search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE){
+search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...){
 
   #ckanr::ckanr_setup(url = ckan_url)
 
   results <- ckanr::package_search(search_term,
                                    rows = rows,
                                    as = 'table',
-                                   url = ckan_url)
+                                   url = ckan_url,
+                                   ...)
+
+  if (results$count == 0) {
+    warning('no results found')
+    return(NULL)
+  } else if (results$count > nrow(results$results)) {
+    warning(glue::glue('{results$count} records found but only {rows} returned'))
+    message("refine your search term or increase number of rows returned")
+  }
 
   if (detailed) {
     return(results)
@@ -76,5 +85,22 @@ search_ckan_sa <- function(search_term, ...){
   ckan <- "https://data.sa.gov.au/data"
   search_ckan(search_term, ckan_url = ckan, ...)
 }
+
+#' @rdname search_ckan
+search_ckan_wa <- function(search_term, ...){
+  ckan <- "https://catalogue.data.wa.gov.au/"
+  search_ckan(search_term, ckan_url = ckan, ...)
+}
+
+#' @rdname search_ckan
+search_ckan_nt <- function(search_term, ...){
+  ckan <- "https://data.nt.gov.au/"
+  search_ckan(search_term, ckan_url = ckan, ...)
+}
+
+
+
+
+
 
 
