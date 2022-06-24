@@ -38,18 +38,18 @@ search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
   } else {
 
     org <- results$results$organization |>
-      dplyr::select(org_id = id, title, type)
+      dplyr::select(org_id = .data$id, .data$title, .data$type)
 
     metadata <- results$results |>
-      dplyr::select(id, name, notes, metadata_created)
+      dplyr::select(.data$id, .data$name, .data$notes, .data$metadata_created)
 
     resources <- dplyr::bind_rows(results$results$resources) |>
-      dplyr::select(id = package_id, created, url)
+      dplyr::select(id = .data$package_id, .data$created, .data$url)
 
     out <- dplyr::bind_cols(metadata, org) |>
       dplyr::left_join(resources) |>
-      dplyr::mutate(ext = tools::file_ext(url),
-                    src = ckan_url)
+      dplyr::mutate(ext = tools::file_ext(.data$url),
+                    src = .env$ckan_url)
 
     return(out)
 
