@@ -4,13 +4,14 @@
 #' @param search_term character words for search, use multiple word to improve results
 #' @param ckan_url character url for ckan api
 #' @param rows integer number of rows/results to return from api
-#' @param detailed logical full ckanr result or simple output 
+#' @param detailed logical full ckanr result or simple output
 #' @param ... variables passed to package_search
 #'
 #' @import ckanr
 #' @importFrom glue glue
 #' @importFrom dplyr select mutate left_join bind_cols
 #' @importFrom rlang .data .env
+#' @importFrom purrr map_dfr
 #'
 #' @return
 #' @export
@@ -18,17 +19,17 @@
 #' @examples
 search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...){
 
-  #ckanr::ckanr_setup(url = ckan_url)
-
-  results <- ckanr::package_search(search_term,
-                                   rows = rows,
-                                   as = 'table',
-                                   url = ckan_url,
-                                   ...)
+  suppressWarnings({
+    results <- ckanr::package_search(search_term,
+                                     rows = rows,
+                                     as = 'table',
+                                     url = ckan_url,
+                                     ...)
+  })
 
   if (results$count == 0) {
     warning('no results found')
-    return(NULL)
+    return(data.frame())
   } else if (results$count > nrow(results$results)) {
     warning(glue::glue('{results$count} records found but only {rows} returned'))
     message("refine your search term or increase number of rows returned")
@@ -44,13 +45,17 @@ search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
     metadata <- results$results |>
       dplyr::select(.data$id, .data$name, .data$notes, .data$metadata_created)
 
-    resources <- dplyr::bind_rows(results$results$resources) |>
-      dplyr::select(id = .data$package_id, .data$created, .data$url)
+    resources <- results$results$resources |>
+      map_dfr(~ dplyr::select(.x, id = .data$package_id, .data$created, .data$url))
 
-    out <- dplyr::bind_cols(metadata, org) |>
-      dplyr::left_join(resources) |>
-      dplyr::mutate(ext = tools::file_ext(.data$url),
-                    src = .env$ckan_url)
+
+
+    suppressWarnings({
+      out <- dplyr::bind_cols(metadata, org) |>
+        dplyr::left_join(resources) |>
+        dplyr::mutate(ext = tools::file_ext(.data$url),
+                      src = .env$ckan_url)
+    })
 
     return(out)
 
