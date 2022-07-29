@@ -28,6 +28,14 @@ search_ckan_wa(search_term, ...)
 search_ckan_nt(search_term, ...)
 }
 \arguments{
+\item{search_term}{character words for search, use multiple word to improve results}
+
+\item{ckan_url}{character url for ckan api}
+
+\item{rows}{integer number of rows/results to return from api}
+
+\item{detailed}{logical full ckanr result or simple output}
+
 \item{...}{variables passed to package_search}
 }
 \value{
