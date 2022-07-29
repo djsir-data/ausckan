@@ -1,11 +1,20 @@
 Package: ausckan
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Search Australian CKAN Repositories
 Version: 0.1.1
-Author: Who wrote it
+Authors@R: 
+    c(
+    person(given = "Matt",
+           family = "Johnson",
+           role = c("aut", "cre"),
+           email = "matthew.johnson@ecodev.vic.gov.au"),
+    person(given = "Department of Jobs, Precincts and Regions (Victoria)",
+           role = c("cph", "fnd"))
+           )
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: ausckan is a very simple package with 2 purposes; make Australian 
+    CKAN repositories more easily available, and narrow the gap between 
+    searching CKAN and getting a list of direct URL's to available data sets.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
