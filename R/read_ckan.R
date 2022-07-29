@@ -63,45 +63,45 @@ search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
 
 
 #' @rdname search_ckan
+#' @export
 search_ckan_vic <- function(search_term, ...){
-  ckan <- "https://discover.data.vic.gov.au/"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$vic, ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_nsw <- function(search_term, ...){
-  ckan <- "https://data.nsw.gov.au/data/"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$nsw, ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_aus <- function(search_term, ...){
-  ckan <- "https://data.gov.au/data/"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$aus, ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_qld <- function(search_term, ...){
-  ckan <- "https://data.qld.gov.au/"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$qld, ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_sa <- function(search_term, ...){
-  ckan <- "https://data.sa.gov.au/data"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$sa, ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_wa <- function(search_term, ...){
-  ckan <- "https://catalogue.data.wa.gov.au/"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$wa, ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_nt <- function(search_term, ...){
-  ckan <- "https://data.nt.gov.au/"
-  search_ckan(search_term, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$nt, ...)
 }
 
 
