@@ -25,6 +25,7 @@ Imports:
     glue,
     magrittr,
     purrr,
+    RCurl,
     rlang
 Suggests: 
     rmarkdown,
