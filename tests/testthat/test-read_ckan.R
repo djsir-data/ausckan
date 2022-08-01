@@ -1,5 +1,5 @@
 
-ulst <- as.list.environment(urls)
+ulst <- as.list.environment(ausckan:::urls)
 
 test_that("urls are current", {
 
@@ -19,7 +19,9 @@ test_that("each ckan repo can be searched", {
     suppressWarnings({
 
       for (n in names(ulst)){
-        search <- do.call(paste0('search_ckan_', n), args = list(search_term = 'schools'))
+        search <- tryCatch({
+          do.call(paste0('search_ckan_', n), args = list(search_term = 'schools'))
+        }, error = function(e){print(paste0(n, ' failed'))})
         expect_s3_class(search, 'data.frame')
       }
 

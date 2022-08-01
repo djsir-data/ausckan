@@ -17,7 +17,9 @@
 #' @export
 #'
 #' @examples
-search_ckan <- function(search_term, ckan_url, rows = 10, file_type, detailed = FALSE, ...){
+search_ckan <- function(search_term, ckan_url, rows = 10, file_type = c("all", "msoffice"), detailed = FALSE, ...){
+
+  file_type <- match.arg(file_type)
 
   suppressWarnings({
     results <- ckanr::package_search(search_term,
@@ -49,11 +51,13 @@ search_ckan <- function(search_term, ckan_url, rows = 10, file_type, detailed = 
       dplyr::select(-c(.data$name))
 
     resources <- results$results$resources |>
-      map_dfr(~ dplyr::select(.x, id = .data$package_id, .data$created, .data$url, .data$name)) |>
-      dplyr::rename(file_name = .data$name)
+      purrr::map_dfr(~ dplyr::select(.x, id = .data$package_id,
+                                     dplyr::one_of('created', 'url', 'name'))) |>
+      dplyr::rename(file_name = .data$name) |>
+      dplyr::filter(!is.na(.data$file_name))
 
     out <- dplyr::bind_cols(metadata, org) |>
-      dplyr::left_join(resources, by = c("id")) |>
+      dplyr::right_join(resources, by = c("id")) |>
       dplyr::mutate(ext = tolower(tools::file_ext(.data$url)),
                     src = .env$ckan_url) |>
       dplyr::select(.data$title, .data$package_name, .data$file_name, .data$url, everything(), -c(.data$id, .data$org_id, .data$created, .data$type)) |>
