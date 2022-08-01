@@ -31,11 +31,11 @@ search_ckan <- function(search_term, ckan_url, rows = 10, file_type = c("all", "
 
 
   if (results$count == 0) {
-    warning('no results found')
+    message('no results found')
     return(data.frame())
   } else if (results$count > nrow(results$results)) {
-    warning(glue::glue('{results$count} records found but only {rows} returned'))
-    message("refine your search term or increase number of rows returned")
+    message(glue::glue('{results$count} records found but only {rows} returned'))
+    message("    refine your search term or increase number of rows returned")
   }
 
   if (detailed) {
