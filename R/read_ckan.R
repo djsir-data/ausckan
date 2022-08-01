@@ -1,7 +1,7 @@
-
 #' @title Search CKAN Data Repository
 #'
 #' @param search_term character words for search, use multiple word to improve results
+#' @param file_type character c("all", "msoffice"), use to restrict files shown to msoffice compatible files
 #' @param ckan_url character url for ckan api
 #' @param rows integer number of rows/results to return from api
 #' @param detailed logical full ckanr result or simple output
@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...){
+search_ckan <- function(search_term, ckan_url, rows = 10, file_type, detailed = FALSE, ...){
 
   suppressWarnings({
     results <- ckanr::package_search(search_term,
@@ -26,6 +26,7 @@ search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
                                      url = ckan_url,
                                      ...)
   })
+
 
   if (results$count == 0) {
     warning('no results found')
@@ -43,12 +44,26 @@ search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
       dplyr::select(org_id = .data$id, .data$title, .data$type)
 
     metadata <- results$results |>
-      dplyr::select(.data$id, .data$name, .data$notes, .data$metadata_created)
+      dplyr::select(.data$id, .data$name, .data$notes) |>
+      dplyr::mutate(package_name = .data$name) |>
+      dplyr::select(-c(.data$name))
 
     resources <- results$results$resources |>
-      map_dfr(~ dplyr::select(.x, id = .data$package_id, .data$created, .data$url))
+      map_dfr(~ dplyr::select(.x, id = .data$package_id, .data$created, .data$url, .data$name)) |>
+      dplyr::rename(file_name = .data$name)
 
+    out <- dplyr::bind_cols(metadata, org) |>
+      dplyr::left_join(resources, by = c("id")) |>
+      dplyr::mutate(ext = tolower(tools::file_ext(.data$url)),
+                    src = .env$ckan_url) |>
+      dplyr::select(.data$title, .data$package_name, .data$file_name, .data$url, everything(), -c(.data$id, .data$org_id, .data$created, .data$type)) |>
+      dplyr::arrange(.data$package_name, .data$file_name)
 
+    if(file_type == "msoffice"){
+      out <- out |>
+        dplyr::filter(ext=="docx"|ext=="xlsx"|ext=="xls"|ext=="csv"|ext=="pptx")
+      warning("returned files filtered to only msoffice files")
+      }
 
     suppressWarnings({
       out <- dplyr::bind_cols(metadata, org) |>
@@ -65,48 +80,46 @@ search_ckan <- function(search_term, ckan_url, rows = 10, detailed = FALSE, ...)
 
 
 
-
-
 #' @rdname search_ckan
 #' @export
-search_ckan_vic <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$vic, ...)
+search_ckan_vic <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$vic, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
 #' @export
-search_ckan_nsw <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$nsw, ...)
+search_ckan_nsw <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$nsw, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
 #' @export
-search_ckan_aus <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$aus, ...)
+search_ckan_aus <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$aus, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
 #' @export
-search_ckan_qld <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$qld, ...)
+search_ckan_qld <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$qld, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
 #' @export
-search_ckan_sa <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$sa, ...)
+search_ckan_sa <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$sa, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
 #' @export
-search_ckan_wa <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$wa, ...)
+search_ckan_wa <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$wa, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
 #' @export
-search_ckan_nt <- function(search_term, ...){
-  search_ckan(search_term, ckan_url = urls$nt, ...)
+search_ckan_nt <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$nt, file_type = "all", ...)
 }
 
 
