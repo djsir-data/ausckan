@@ -21,13 +21,20 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/djpr-data/ausckan/workflows/R-CMD-check/badge.svg)](https://github.com/djpr-data/ausckan/actions)
 <!-- badges: end -->
 
-The goal of ausckan is to ...
+The goal of ausckan is to simplify the process of searching for data on Australia's State and Federal CKAN based repositories. In Australia, along side the Federal https://data.gov.au/ every State and Territory maintain a CKAN API except ACT and Tasmania. 
+
+The wonderful [ckanr](https://github.com/ropensci/ckanr) package already wraps the CKAN API and ausckan accesses API's via ckanr. ausckan is a very simple package with 2 purposes:
+
+1. Make the Australia CKAN repositories more easily available
+2. Narrow the gap between searching CKAN and getting a list of direct URL's to available data sets
+
+
 
 ## Installation
 
 You can install the development version of ausckan like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+remotes::install_github("djpr-data/ausckan")
 ```
 

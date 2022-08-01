@@ -11,6 +11,7 @@
 #' @importFrom glue glue
 #' @importFrom dplyr select mutate left_join bind_cols
 #' @importFrom rlang .data .env
+#' @importFrom purrr map_dfr
 #'
 #' @return
 #' @export
@@ -18,18 +19,18 @@
 #' @examples
 search_ckan <- function(search_term, ckan_url, rows = 10, file_type, detailed = FALSE, ...){
 
-  #ckanr::ckanr_setup(url = ckan_url)
-
-  results <- ckanr::package_search(search_term,
-                                   rows = rows,
-                                   as = 'table',
-                                   url = ckan_url,
-                                   ...)
+  suppressWarnings({
+    results <- ckanr::package_search(search_term,
+                                     rows = rows,
+                                     as = 'table',
+                                     url = ckan_url,
+                                     ...)
+  })
 
 
   if (results$count == 0) {
     warning('no results found')
-    return(NULL)
+    return(data.frame())
   } else if (results$count > nrow(results$results)) {
     warning(glue::glue('{results$count} records found but only {rows} returned'))
     message("refine your search term or increase number of rows returned")
@@ -47,10 +48,9 @@ search_ckan <- function(search_term, ckan_url, rows = 10, file_type, detailed = 
       dplyr::mutate(package_name = .data$name) |>
       dplyr::select(-c(.data$name))
 
-    resources <- dplyr::bind_rows(results$results$resources) |>
-      dplyr::select(id = .data$package_id, .data$created, .data$url, .data$name)|>
-      dplyr::mutate(file_name = .data$name) |>
-      dplyr::select(-c(.data$name))
+    resources <- results$results$resources |>
+      map_dfr(~ dplyr::select(.x, id = .data$package_id, .data$created, .data$url, .data$name)) |>
+      dplyr::rename(file_name = .data$name)
 
     out <- dplyr::bind_cols(metadata, org) |>
       dplyr::left_join(resources, by = c("id")) |>
@@ -65,58 +65,61 @@ search_ckan <- function(search_term, ckan_url, rows = 10, file_type, detailed = 
       warning("returned files filtered to only msoffice files")
       }
 
-    rcount<-nrow(out)
+    suppressWarnings({
+      out <- dplyr::bind_cols(metadata, org) |>
+        dplyr::left_join(resources) |>
+        dplyr::mutate(ext = tools::file_ext(.data$url),
+                      src = .env$ckan_url)
+    })
 
     return(out)
 
   }
 
-
-
 }
 
 
 
 #' @rdname search_ckan
-search_ckan_vic <- function(search_term, file_type = "all",...){
-  ckan <- "https://discover.data.vic.gov.au/"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+#' @export
+search_ckan_vic <- function(search_term, file_type = "all", ...){
+  search_ckan(search_term, ckan_url = urls$vic, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_nsw <- function(search_term, file_type = "all", ...){
-  ckan <- "https://data.nsw.gov.au/data/"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$nsw, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_aus <- function(search_term, file_type = "all", ...){
-  ckan <- "https://data.gov.au/data/"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$aus, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_qld <- function(search_term, file_type = "all", ...){
-  ckan <- "https://data.qld.gov.au/"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$qld, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_sa <- function(search_term, file_type = "all", ...){
-  ckan <- "https://data.sa.gov.au/data"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$sa, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_wa <- function(search_term, file_type = "all", ...){
-  ckan <- "https://catalogue.data.wa.gov.au/"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$wa, file_type = "all", ...)
 }
 
 #' @rdname search_ckan
+#' @export
 search_ckan_nt <- function(search_term, file_type = "all", ...){
-  ckan <- "https://data.nt.gov.au/"
-  search_ckan(search_term, file_type, ckan_url = ckan, ...)
+  search_ckan(search_term, ckan_url = urls$nt, file_type = "all", ...)
 }
 
 
